@@ -9,7 +9,7 @@ export class TodosAccess {
     private readonly todosTable = process.env.TODOS_TABLE
   ) {}
 
-  async createTodo(todo: TodoItem) {
+  async createTodo(todo: TodoItem): Promise<TodoItem> {
     await this.docClient
       .put({
         TableName: this.todosTable,

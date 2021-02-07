@@ -2,7 +2,7 @@ import * as uuid from 'uuid'
 
 import { TodoItem } from '../models/TodoItem'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
-import { TodosAccess } from '../dataLayer/todosAcces'
+import { TodosAccess } from '../dataLayer/todosAccess'
 
 const todosAccess = new TodosAccess()
 
