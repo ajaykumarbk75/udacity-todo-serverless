@@ -44,3 +44,8 @@ export async function updateTodo(
   const updatedTodo = await todosAccess.updateTodo(todoId, updateTodoRequest)
   return updatedTodo
 }
+
+export async function deleteTodo(todoId: string): Promise<TodoItem> {
+  const item = await todosAccess.deleteTodo(todoId)
+  return item
+}

@@ -1,10 +1,35 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  APIGatewayProxyHandler
+} from 'aws-lambda'
+import { getUserId } from '../utils'
+import {
+  deleteTodo,
+  isUserAllowedToAccessTodo
+} from '../../businessLogic/todos'
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler: APIGatewayProxyHandler = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
+  const userId = getUserId(event)
 
-  // TODO: Remove a TODO item by id
-  return undefined
+  // 1. Check if user is allowed to edit the selected item - if not, return an adequate error message incl. status code
+  if (!isUserAllowedToAccessTodo(userId, todoId)) {
+    return {
+      statusCode: 403,
+      headers: {},
+      body: ''
+    }
+  }
+  // 2. Delete the item
+  await deleteTodo(todoId)
+  return {
+    statusCode: 204,
+    headers: {},
+    body: ''
+  }
 }
