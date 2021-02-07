@@ -20,3 +20,8 @@ export async function createTodo(
     done: false
   })
 }
+
+export async function getTodos(userId: string): Promise<TodoItem[]> {
+  const todos = await todosAccess.getTodos(userId)
+  return todos
+}
