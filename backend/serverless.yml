@@ -119,9 +119,9 @@ resources:
         LocalSecondaryIndexes:
           - IndexName: ${self:provider.environment.USER_ID_INDEX}
             KeySchema:
-              - AttributeName: userId
+              - AttributeName: todoId
                 KeyType: HASH
-              - AttributeName: createdAt
+              - AttributeName: userId
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL # What attributes will be copied to an index
@@ -143,6 +143,7 @@ resources:
                 - DELETE
                 - HEAD
               MaxAge: 3000
+
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -155,4 +156,4 @@ resources:
               Principal: '*'
               Action: 's3:GetObject'
               Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENTS_S3_BUCKET}/*'
-          Bucket: !Ref AttachmentBucket
+        Bucket: !Ref AttachmentBucket
