@@ -8,7 +8,8 @@ import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 export class TodosAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
-    private readonly todosTable = process.env.TODOS_TABLE
+    private readonly todosTable = process.env.TODOS_TABLE,
+    private readonly todoIdIndex = process.env.TODO_ID_INDEX
   ) {}
 
   async createTodo(todo: TodoItem): Promise<TodoItem> {
@@ -26,6 +27,7 @@ export class TodosAccess {
     const result = await this.docClient
       .query({
         TableName: this.todosTable,
+        IndexName: this.todoIdIndex,
         KeyConditionExpression: 'userId = :userId',
         ExpressionAttributeValues: {
           ':userId': userId
