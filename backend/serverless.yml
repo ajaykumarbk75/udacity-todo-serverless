@@ -13,7 +13,7 @@ provider:
   region: ${opt:region, 'us-east-1'}
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
-    TODO_ID_INDEX: userId
+    CREATED_AT_INDEX: userId
     ATTACHMENTS_S3_BUCKET: todo-attachments-as-wattram-${self:provider.stage}
     SIGNED_URL_EXPIRATION_TIME: 300
 
@@ -33,7 +33,7 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODO_ID_INDEX}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.CREATED_AT_INDEX}
 
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
@@ -112,16 +112,16 @@ resources:
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
-          - AttributeName: createdAt
+          - AttributeName: todoId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.TODOS_TABLE}
         LocalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.TODO_ID_INDEX}
+          - IndexName: ${self:provider.environment.CREATED_AT_INDEX}
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
-              - AttributeName: todoId
+              - AttributeName: createdAt
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL # What attributes will be copied to an index
