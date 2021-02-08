@@ -32,20 +32,28 @@ export async function isUserAllowedToAccessTodo(
   userId: string,
   todoId: string
 ): Promise<Boolean> {
-  const todo: TodoItem = await todosAccess.getTodo(todoId)
-  if (todo.userId === userId) return true
+  const todo: TodoItem = await todosAccess.getTodo(userId, todoId)
+  if (todo) return true
   return false
 }
 
 export async function updateTodo(
+  userId: string,
   todoId: string,
   updateTodoRequest: UpdateTodoRequest
 ): Promise<TodoUpdate> {
-  const updatedTodo = await todosAccess.updateTodo(todoId, updateTodoRequest)
+  const updatedTodo = await todosAccess.updateTodo(
+    userId,
+    todoId,
+    updateTodoRequest
+  )
   return updatedTodo
 }
 
-export async function deleteTodo(userId: string, todoId: string): Promise<TodoItem> {
+export async function deleteTodo(
+  userId: string,
+  todoId: string
+): Promise<TodoItem> {
   const item = await todosAccess.deleteTodo(userId, todoId)
   return item
 }
