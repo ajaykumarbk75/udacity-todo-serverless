@@ -29,7 +29,10 @@ export const handler: APIGatewayProxyHandler = async (
   await deleteTodo(userId, todoId)
   return {
     statusCode: 204,
-    headers: {},
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true
+    },
     body: ''
   }
 }

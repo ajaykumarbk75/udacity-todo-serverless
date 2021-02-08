@@ -39,7 +39,10 @@ export const handler: APIGatewayProxyHandler = async (
   logger.info('Todo updated.')
   return {
     statusCode: 204,
-    headers: {},
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true
+    },
     body: ''
   }
 }
