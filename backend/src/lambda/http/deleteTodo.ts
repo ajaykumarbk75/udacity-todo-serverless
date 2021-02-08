@@ -26,7 +26,7 @@ export const handler: APIGatewayProxyHandler = async (
     }
   }
   // 2. Delete the item
-  await deleteTodo(todoId)
+  await deleteTodo(userId, todoId)
   return {
     statusCode: 204,
     headers: {},

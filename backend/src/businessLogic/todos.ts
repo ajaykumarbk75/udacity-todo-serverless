@@ -45,7 +45,7 @@ export async function updateTodo(
   return updatedTodo
 }
 
-export async function deleteTodo(todoId: string): Promise<TodoItem> {
-  const item = await todosAccess.deleteTodo(todoId)
+export async function deleteTodo(userId: string, todoId: string): Promise<TodoItem> {
+  const item = await todosAccess.deleteTodo(userId, todoId)
   return item
 }
