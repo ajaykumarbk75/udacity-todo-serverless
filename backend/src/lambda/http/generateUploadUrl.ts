@@ -6,25 +6,25 @@ import {
   APIGatewayProxyHandler
 } from 'aws-lambda'
 
-import * as AWS from 'aws-sdk'
-
-const bucketName = process.env.ATTACHMENTS_S3_BUCKET
-const urlExpiration = process.env.SIGNED_URL_EXPIRATION_TIME
-
-const s3 = new AWS.S3({
-  signatureVersion: 'v4'
-})
+import {
+  getAttachmentLinkForTodo,
+  getSignedUrl,
+  updateAttachmentLinkOfTodo
+} from '../../businessLogic/todos'
+import { getUserId } from '../utils'
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId
+  const userId = getUserId(event)
 
-  const signedUrl = s3.getSignedUrl('putObject', {
-    Bucket: bucketName,
-    Key: todoId,
-    Expires: urlExpiration
-  })
+  // 1. Get signed url
+  const signedUrl: string = getSignedUrl(todoId)
+
+  // 2. Update todo item to contain attachmentUrl
+  const attachmentUrl: string = getAttachmentLinkForTodo(todoId)
+  await updateAttachmentLinkOfTodo(userId, todoId, attachmentUrl)
 
   return {
     statusCode: 201,

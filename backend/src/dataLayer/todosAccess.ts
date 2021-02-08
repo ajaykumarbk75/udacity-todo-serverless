@@ -72,6 +72,24 @@ export class TodosAccess {
     return result.Attributes as TodoUpdate
   }
 
+  async updateAttachmentLinkOfTodo(
+    userId: string,
+    todoId: string,
+    attachmentUrl: string
+  ): Promise<TodoUpdate> {
+    const result = await this.docClient
+      .update({
+        TableName: this.todosTable,
+        Key: { userId, todoId },
+        UpdateExpression: 'set attachmentUrl = :attachmentUrl',
+        ExpressionAttributeValues: {
+          ':attachmentUrl': attachmentUrl
+        }
+      })
+      .promise()
+    return result.Attributes as TodoUpdate
+  }
+
   async deleteTodo(userId: string, todoId: string): Promise<TodoItem> {
     const result = await this.docClient
       .delete({
