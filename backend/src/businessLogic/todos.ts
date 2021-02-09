@@ -1,5 +1,6 @@
 import * as uuid from 'uuid'
 import * as AWS from 'aws-sdk'
+import * as AWSXRay from 'aws-xray-sdk'
 
 import { TodoItem } from '../models/TodoItem'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
@@ -8,8 +9,9 @@ import { TodoUpdate } from '../models/TodoUpdate'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
 const todosAccess = new TodosAccess()
+const XAWS = AWSXRay.captureAWS(AWS)
 
-const s3 = new AWS.S3({
+const s3 = new XAWS.S3({
   signatureVersion: 'v4'
 })
 

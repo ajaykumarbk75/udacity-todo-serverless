@@ -1,9 +1,12 @@
 import * as AWS from 'aws-sdk'
+import * as AWSXRay from 'aws-xray-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
+
+const XAWS = AWSXRay.captureAWS(AWS)
 
 export class TodosAccess {
   constructor(
@@ -103,5 +106,11 @@ export class TodosAccess {
 }
 
 function createDynamoDBClient(): DocumentClient {
-  return new AWS.DynamoDB.DocumentClient()
+  if (process.env.IS_OFFLINE) {
+    return new XAWS.DynamoDB.DocumentClient({
+      region: 'localhost',
+      endpoint: 'http://localhost:8000'
+    })
+  }
+  return new XAWS.DynamoDB.DocumentClient()
 }
