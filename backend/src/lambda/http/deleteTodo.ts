@@ -26,6 +26,9 @@ export const handler: APIGatewayProxyHandler = async (
     `deleteTodo.ts: User ${userId} is allowed to access todo ${todoId}: ${isUserAllowed}`
   )
   if (!isUserAllowed) {
+    logger.info(
+      `deleteTodo.ts: Todo ${todoId} with user ${userId} has not been deleted because of insufficient permissions`
+    )
     return {
       statusCode: 403,
       headers: {
