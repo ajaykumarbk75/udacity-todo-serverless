@@ -23,20 +23,34 @@ export const handler: APIGatewayProxyHandler = async (
   const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
   const userId = getUserId(event)
 
-  logger.info('Updating todo...')
-  // 1. Check if user is allowed to edit the selected item - if not, return an adequate error message incl. status code
-  if (!(await isUserAllowedToAccessTodo(userId, todoId))) {
-    logger.error('User not allowed to update specified todo')
+  logger.info(
+    `updateTodo.ts: user ${userId} wants to update todo ${todoId} with the following data ${updatedTodo}`
+  )
+
+  // 1. Check if user is allowed to access the selected todo - if not, return an adequate error message incl. status code
+  const isUserAllowed: Boolean = await isUserAllowedToAccessTodo(userId, todoId)
+  logger.info(
+    `updateTodo.ts: User ${userId} is allowed to access todo ${todoId}: ${isUserAllowed}`
+  )
+  if (!isUserAllowed) {
+    logger.info(
+      `updateTodo.ts: Todo ${todoId} with user ${userId} has not been updated because of insufficient permissions`
+    )
     return {
       statusCode: 403,
-      headers: {},
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true
+      },
       body: ''
     }
   }
 
   // 2. Update the item
   await updateTodo(userId, todoId, updatedTodo)
-  logger.info('Todo updated.')
+  logger.info(
+    `updateTodo.ts: Todo ${todoId} with user ${userId} has been updated`
+  )
   return {
     statusCode: 204,
     headers: {
