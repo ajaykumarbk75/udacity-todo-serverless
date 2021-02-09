@@ -41,7 +41,9 @@ export async function isUserAllowedToAccessTodo(
   todoId: string
 ): Promise<Boolean> {
   const todo: TodoItem = await todosAccess.getTodo(userId, todoId)
-  if (todo) return true
+  if (todo) {
+    return true
+  }
   return false
 }
 
